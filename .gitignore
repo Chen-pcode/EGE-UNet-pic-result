@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+
+data/isic2017/
+data/isic2018/
+pre_trained/
+results/*/
+
+*.pth
+*.pt
+*.ckpt
+*.log
+
+.ipynb_checkpoints/
