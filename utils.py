@@ -222,6 +222,7 @@ def get_scheduler(config, optimizer):
 
 
 def save_imgs(img, msk, msk_pred, i, save_path, datasets, threshold=0.5, test_data_name=None):
+    os.makedirs(save_path, exist_ok=True)
     img = img.squeeze(0).permute(1,2,0).detach().cpu().numpy()
     img = img / 255. if img.max() > 1.1 else img
     if datasets == 'retinal':
@@ -232,15 +233,15 @@ def save_imgs(img, msk, msk_pred, i, save_path, datasets, threshold=0.5, test_da
         msk_pred = np.where(np.squeeze(msk_pred, axis=0) > threshold, 1, 0) 
 
     if test_data_name is not None:
-        prefix = save_path + test_data_name + '_' + str(i)
+        prefix = os.path.join(save_path, test_data_name + '_' + str(i))
     else:
-        prefix = save_path + str(i)
+        prefix = os.path.join(save_path, str(i))
 
-        plt.imsave(prefix + '_image.png', img)
+    plt.imsave(prefix + '_image.png', img)
 
-        plt.imsave(prefix + '_mask.png', msk, cmap='gray')
+    plt.imsave(prefix + '_mask.png', msk, cmap='gray')
 
-        plt.imsave(prefix + '_pred.png', msk_pred, cmap='gray')
+    plt.imsave(prefix + '_pred.png', msk_pred, cmap='gray')
 
     #plt.figure(figsize=(7,15))
 

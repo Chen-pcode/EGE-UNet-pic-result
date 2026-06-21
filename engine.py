@@ -78,8 +78,10 @@ def val_one_epoch(test_loader,
             preds.append(out) 
 
     if epoch % config.val_interval == 0:
-        preds = np.array(preds).reshape(-1)
-        gts = np.array(gts).reshape(-1)
+        preds_array = np.concatenate(preds, axis=0)
+        gts_array = np.concatenate(gts, axis=0)
+        preds = preds_array.reshape(-1)
+        gts = gts_array.reshape(-1)
 
         y_pre = np.where(preds>=config.threshold, 1, 0)
         y_true = np.where(gts>=0.5, 1, 0)
@@ -134,8 +136,10 @@ def test_one_epoch(test_loader,
             preds.append(out) 
             save_imgs(img, msk, out, i, config.work_dir + 'outputs/', config.datasets, config.threshold, test_data_name=test_data_name)
 
-        preds = np.array(preds).reshape(-1)
-        gts = np.array(gts).reshape(-1)
+        preds_array = np.concatenate(preds, axis=0)
+        gts_array = np.concatenate(gts, axis=0)
+        preds = preds_array.reshape(-1)
+        gts = gts_array.reshape(-1)
 
         y_pre = np.where(preds>=config.threshold, 1, 0)
         y_true = np.where(gts>=0.5, 1, 0)
@@ -159,8 +163,8 @@ def test_one_epoch(test_loader,
         logger.info(log_info)
 
         advanced_metrics = segmentation_metrics(
-            np.array(preds),
-            np.array(gts),
+            preds_array,
+            gts_array,
             threshold=config.threshold,
             boundary_tolerance=getattr(config, 'boundary_tolerance', 2)
         )
